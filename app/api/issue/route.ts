@@ -1,9 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import prisma from "@/prisma/client";
-const issueSchema = z.object({
-	title: z.string().min(5).max(255),
-	description: z.string().min(10),
+export const issueSchema = z.object({
+	title: z
+		.string({ message: "Title is required" })
+		.min(5, { message: "Title must be at least 5 characters" })
+		.max(255, { message: "Title must be at most 255 characters" }),
+	description: z
+		.string({ message: "Description is required" })
+		.min(10, { message: "Description must be at least 10 characters" }),
 });
 export async function POST(request: NextRequest) {
 	try {
