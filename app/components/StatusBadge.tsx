@@ -1,17 +1,17 @@
 import { Badge } from "@radix-ui/themes";
 import React from "react";
 import { color } from "../issues/page";
+import { Status } from "../generated/prisma";
 
-const StatusBadge = ({
-	children,
-	color,
-}: {
-	children: React.ReactNode;
-	color: color;
-}) => {
+const StatusBadge = ({ status }: { status: Status }) => {
+	const statusBadgeColor: Record<Status, color> = {
+		OPEN: "orange",
+		IN_PROGRESS: "yellow",
+		CLOSED: "green",
+	};
 	return (
-		<Badge color={color} size="1">
-			{children}
+		<Badge color={statusBadgeColor[status]} size="1">
+			{status}
 		</Badge>
 	);
 };

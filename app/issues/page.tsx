@@ -2,19 +2,15 @@ import prisma from "@/prisma/client";
 import { Button, Table } from "@radix-ui/themes";
 import { Record } from "@prisma/client/runtime/library";
 import StatusBadge from "../components/StatusBadge";
-import { Status } from "../generated/prisma";
+import Link from "next/link";
 export type color = "orange" | "yellow" | "green";
 const IssuesPage = async () => {
-	const statusBadge: Record<Status, color> = {
-		OPEN: "orange",
-		IN_PROGRESS: "yellow",
-		CLOSED: "green",
-	};
-
 	const allIssues = await prisma.issue.findMany();
 	return (
-		<div className="m-4">
-			<Button>New Issue</Button>
+		<div>
+			<Link href={`/issues/new`}>
+				<Button>New Issue</Button>
+			</Link>
 			<Table.Root variant="surface" className="mt-4">
 				<Table.Header>
 					<Table.Row>
@@ -32,10 +28,12 @@ const IssuesPage = async () => {
 					{allIssues.map((issue) => (
 						<Table.Row key={issue.id}>
 							<Table.RowHeaderCell>
-								{issue.title}
-								<StatusBadge color={statusBadge[issue.status]}>
-									{issue.status}
-								</StatusBadge>
+								<Link href={`/issues/${issue.id}`}>
+									{issue.title}
+									<StatusBadge
+										status={issue.status}
+									></StatusBadge>
+								</Link>
 							</Table.RowHeaderCell>
 							<Table.Cell className="max-md:hidden">
 								{issue.description}
