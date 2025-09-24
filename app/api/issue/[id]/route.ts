@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { issueSchema } from "../route";
+import { issueSchema } from "../issueSchema";
 import prisma from "@/prisma/client";
 
 export async function PATCH(

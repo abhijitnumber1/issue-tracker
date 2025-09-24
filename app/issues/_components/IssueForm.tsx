@@ -5,7 +5,7 @@ import { useForm, Controller } from "react-hook-form";
 import dynamic from "next/dynamic";
 import axios from "axios";
 import { z } from "zod";
-import { issueSchema } from "@/app/api/issue/route";
+import { editIssueSchema, issueSchema } from "@/app/api/issue/issueSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 
@@ -14,7 +14,8 @@ const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
 	ssr: false,
 });
 import "easymde/dist/easymde.min.css";
-type IssueData = z.infer<typeof issueSchema>;
+import { is } from "zod/locales";
+type IssueData = z.infer<typeof editIssueSchema | typeof issueSchema>;
 interface Props {
 	issue?: IssueData;
 }
@@ -36,7 +37,9 @@ const IssueForm = ({ issue }: Props) => {
 			className="max-w-lg p-4 space-y-3"
 			onSubmit={handleSubmit(async (data) => {
 				try {
-					const response = await axios.post("/api/issue", data);
+					if (issue && "id" in issue)
+						await axios.patch(`/api/issue/${issue.id}`, data);
+					else await axios.post("/api/issue", data);
 					reset();
 					router.push(`/issues`);
 				} catch (error) {
@@ -63,7 +66,7 @@ const IssueForm = ({ issue }: Props) => {
 			{errors.description && (
 				<p className="text-red-500">{errors.description.message}</p>
 			)}
-			<Button>Create New Issue</Button>
+			<Button>{issue ? "Update Issue" : "Create Issue"}</Button>
 		</form>
 	);
 };
