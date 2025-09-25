@@ -6,6 +6,7 @@ import React from "react";
 import ReactMarkdown from "react-markdown";
 import { Pencil2Icon } from "@radix-ui/react-icons";
 import Link from "next/link";
+import AlertDialogDemo from "./AlertComponent";
 
 const IndividualIssues = async ({ params }: { params: { id: string } }) => {
 	// Await the params object before using its properties
@@ -19,8 +20,8 @@ const IndividualIssues = async ({ params }: { params: { id: string } }) => {
 		notFound(); // 👈 Redirects to the 404 page
 	}
 	return (
-		<Grid columns={{ initial: "1", md: "2" }} gap="5">
-			<Box>
+		<Grid columns={{ initial: "1", md: "5" }} gap="5">
+			<Box className="lg:col-span-4">
 				<Heading>{issue?.title}</Heading>
 				<Flex className="space-x-3" my="2">
 					<StatusBadge status={issue.status}></StatusBadge>
@@ -31,10 +32,15 @@ const IndividualIssues = async ({ params }: { params: { id: string } }) => {
 				</Card>
 			</Box>
 			<Box>
-				<Button>
-					<Pencil2Icon />
-					<Link href={`/issues/${issue.id}/edit`}>Edit Issue</Link>
-				</Button>
+				<Flex direction={"column"} gap="3">
+					<Button>
+						<Pencil2Icon />
+						<Link href={`/issues/${issue.id}/edit`}>
+							Edit Issue
+						</Link>
+					</Button>
+					<AlertDialogDemo delete_id={issue.id} />
+				</Flex>
 			</Box>
 		</Grid>
 	);
