@@ -1,9 +1,13 @@
+"use client";
 import Link from "next/link";
 import React from "react";
 import { GiBugNet } from "react-icons/gi";
 import { GiLongAntennaeBug } from "react-icons/gi";
 import ActiveLink from "./components/ActiveLink";
+import { useSession } from "next-auth/react";
+import { Box } from "@radix-ui/themes";
 const NavBar = () => {
+	const { data: session, status } = useSession();
 	const links = [
 		{
 			label: "Dashboard",
@@ -26,7 +30,13 @@ const NavBar = () => {
 						<ActiveLink href={link.href}>{link.label}</ActiveLink>
 					</li>
 				))}
+				{status === "authenticated" ? (
+					<ActiveLink href="/api/auth/signout">Logout</ActiveLink>
+				) : (
+					<ActiveLink href="/api/auth/signin">Login</ActiveLink>
+				)}
 			</ul>
+			<Box></Box>
 		</nav>
 	);
 };
