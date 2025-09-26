@@ -18,7 +18,7 @@ const AlertDialogDemo = ({ delete_id }: Props) => {
 			setError(false);
 			setIsDeleting(true);
 
-			await axios.delete("/api/issuef/" + delete_id);
+			await axios.delete("/api/issue/" + delete_id);
 			router.push("/issues");
 			router.refresh();
 		} catch (error) {
