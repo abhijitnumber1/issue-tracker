@@ -1,14 +1,29 @@
 import StatusBadge from "@/app/components/StatusBadge";
 import prisma from "@/prisma/client";
-import { Box, Button, Card, Flex, Grid, Heading, Text } from "@radix-ui/themes";
-import { notFound } from "next/navigation";
+import {
+	Box,
+	Button,
+	Card,
+	Flex,
+	Grid,
+	Heading,
+	Select,
+	Text,
+} from "@radix-ui/themes";
+import { notFound, redirect } from "next/navigation";
 import React from "react";
 import ReactMarkdown from "react-markdown";
 import { Pencil2Icon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import AlertDialogDemo from "./AlertComponent";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { getServerSession } from "next-auth";
 
 const IndividualIssues = async ({ params }: { params: { id: string } }) => {
+	const session = await getServerSession(authOptions);
+	if (!session) {
+		redirect("/api/auth/signin");
+	}
 	// Await the params object before using its properties
 	const { id } = await params;
 	const issue = await prisma.issue.findUnique({
@@ -33,6 +48,18 @@ const IndividualIssues = async ({ params }: { params: { id: string } }) => {
 			</Box>
 			<Box>
 				<Flex direction={"column"} gap="3">
+					<Select.Root defaultValue="apple">
+						<Select.Trigger />
+						<Select.Content>
+							<Select.Group>
+								<Select.Label>Select an Assignee</Select.Label>
+								<Select.Item value="orange">Orange</Select.Item>
+								<Select.Item value="apple">Apple</Select.Item>
+								<Select.Item value="grape">Grape</Select.Item>
+							</Select.Group>
+						</Select.Content>
+					</Select.Root>
+
 					<Button>
 						<Pencil2Icon />
 						<Link href={`/issues/${issue.id}/edit`}>

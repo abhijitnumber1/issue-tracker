@@ -3,8 +3,15 @@ import { Button, Table } from "@radix-ui/themes";
 import { Record } from "@prisma/client/runtime/library";
 import StatusBadge from "../components/StatusBadge";
 import Link from "next/link";
+import { getServerSession } from "next-auth";
 export type color = "orange" | "yellow" | "green";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { redirect } from "next/navigation";
 const IssuesPage = async () => {
+	const session = await getServerSession(authOptions);
+	if (!session) {
+		redirect("/api/auth/signin");
+	}
 	const allIssues = await prisma.issue.findMany();
 	return (
 		<div>

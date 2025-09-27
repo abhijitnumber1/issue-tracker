@@ -1,8 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/prisma/client";
 import { issueSchema } from "./issueSchema";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+import { authOptions } from "../auth/[...nextauth]/route";
 export async function POST(request: NextRequest) {
 	try {
+		const session = await getServerSession(authOptions);
+		if (!session) {
+			redirect("/api/auth/signin");
+		}
 		const body = await request.json();
 		const valid = issueSchema.safeParse(body);
 		if (!valid.success) {
