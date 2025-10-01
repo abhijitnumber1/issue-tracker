@@ -18,6 +18,7 @@ import Link from "next/link";
 import AlertDialogDemo from "./AlertComponent";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getServerSession } from "next-auth";
+import AssigneeComponent from "./AssigneeComponent";
 
 const IndividualIssues = async ({ params }: { params: { id: string } }) => {
 	const session = await getServerSession(authOptions);
@@ -48,17 +49,10 @@ const IndividualIssues = async ({ params }: { params: { id: string } }) => {
 			</Box>
 			<Box>
 				<Flex direction={"column"} gap="3">
-					<Select.Root defaultValue="apple">
-						<Select.Trigger />
-						<Select.Content>
-							<Select.Group>
-								<Select.Label>Select an Assignee</Select.Label>
-								<Select.Item value="orange">Orange</Select.Item>
-								<Select.Item value="apple">Apple</Select.Item>
-								<Select.Item value="grape">Grape</Select.Item>
-							</Select.Group>
-						</Select.Content>
-					</Select.Root>
+					<AssigneeComponent
+						issueId={issue.id}
+						assignedTo={issue.assignedToUserId}
+					/>
 
 					<Button>
 						<Pencil2Icon />

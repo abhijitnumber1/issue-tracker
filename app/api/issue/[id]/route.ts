@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { issueSchema } from "../issueSchema";
+import { issueSchema, editIssueSchema } from "../issueSchema";
 import prisma from "@/prisma/client";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
@@ -15,7 +15,7 @@ export async function PATCH(
 			redirect("/api/auth/signin");
 		}
 		const body = await request.json();
-		const valid = issueSchema.safeParse(body);
+		const valid = editIssueSchema.safeParse(body);
 		if (!valid.success) {
 			return NextResponse.json(
 				{ errors: valid.error.issues }, // 👈 structured JSON
@@ -46,6 +46,7 @@ export async function PATCH(
 			data: {
 				title: body.title,
 				description: body.description,
+				assignedToUserId: body.assignedToUserId,
 			},
 		});
 		return NextResponse.json(updatedIssue, {
@@ -53,6 +54,7 @@ export async function PATCH(
 			headers: { "Content-Type": "application/json" },
 		});
 	} catch (error) {
+		console.error(error);
 		return NextResponse.json(
 			{ message: "Something went wrong" },
 			{
